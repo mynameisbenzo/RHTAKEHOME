@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <title>Part 3</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      .alternating-0 {
+        background-color: #ced4ff;
+      }
+      .alternating-1 {
+        background-color: #fbffe6;
+      }
+      .done {
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body class="container-fluid text-center">
+    <h2 class="display-4">My Task List</h2>
+    <table class="table table-bordered" id="todo">
+      <tr class="alternating-0">
+        <th>Task Name</th>
+        <th>Time Completed</th>
+        <th></th>
+      </tr>
+      <tr class="alternating-1" id="1">
+        <td>Get groceries</td>
+        <td class="t_completed"></td>
+        <td class="item_complete">
+          <input onchange="updateTask(this)" type="checkbox" />
+        </td>
+      </tr>
+      <tr class="alternating-0" id="2">
+        <td>Take out trash</td>
+        <td class="t_completed"></td>
+        <td class="item_complete">
+          <input onchange="updateTask(this)" type="checkbox" />
+        </td>
+      </tr>
+    </table>
+    <div class="input-group" id="TodoAdd">
+      <input
+        type="text"
+        id="myInput"
+        class="form-control"
+        placeholder="Next Task"
+      />
+      <div class="input-group-append">
+        <button class="btn btn-primary" onclick="addTask()">Add</button>
+      </div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var formatAMPM = (date) => {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? "pm" : "am";
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        var strTime = hours + ":" + minutes + " " + ampm;
+        return strTime;
+      };
+      var updateTask = (element) => {
+        let grandpa = element.parentElement.parentElement;
+        if (element.checked) {
+          grandpa.children[0].classList.add("done");
+          let d = new Date();
+          grandpa.children[1].innerHTML = `${
+            months[d.getMonth()]
+          } ${d.getDate()}, ${d.getFullYear()}, ${formatAMPM(d)}`;
+        } else {
+          grandpa.children[0].classList.remove("done");
+          grandpa.children[1].innerHTML = "";
+        }
+      };
+      var addTask = () => {
+        var input_value = document.getElementById("myInput").value;
+        if (input_value.length < 1) {
+          return;
+        }
+        var id = document.getElementById("todo").rows.length;
+        var row = document.createElement("tr");
+        row.id = id;
+        row.classList.add(`alternating-${id % 2}`);
+        var taskCol = document.createElement("td");
+        taskCol.innerHTML = input_value;
+        var completedCol = document.createElement("td");
+        completedCol.classList = "t_completed";
+        var checkCol = document.createElement("td");
+        checkCol.classList = "item_complete";
+        var checkInput = document.createElement("input");
+        checkInput.type = "checkbox";
+        checkCol.appendChild(checkInput);
+        row.appendChild(taskCol);
+        row.appendChild(completedCol);
+        row.appendChild(checkCol);
+        document.getElementById("todo").appendChild(row);
+        checkInput.addEventListener("change", function (e) {
+          updateTask(e.target);
+        });
+      };
+      document
+        .getElementById("myInput")
+        .addEventListener("keypress", function (event) {
+          if (event.keyCode == 13) {
+            addTask();
+          }
+        });
+    </script>
+  </body>
+</html>
