@@ -1,0 +1,14 @@
+-- query 1
+
+-- query 2
+with cte as (
+  select EmployeeId,ManagerId from valid_mng
+  union all
+  select c.EmployeeId,e.ManagerId 
+  from cte c join valid_mng e on (c.ManagerId=e.EmployeeId)
+  )
+
+select EmployeeId,FirstName,LastName
+from [Execute] m
+left join cte e on (e.ManagerId=m.ManagerId)
+where m.ManagerId='[manager id goes here]'
